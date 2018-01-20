@@ -1123,12 +1123,12 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 
 int adventurerEffect(int *drawntreasure, struct gameState *state, int *currentPlayer, int *z, int *temphand){
     while((*drawntreasure)<2){
-        if (state->deckCount[*currentPlayer] <1){//if the deck is empty we need to shuffle discard and add to deck
+        if (state->deckCount[*currentPlayer] <0){//if the deck is empty we need to shuffle discard and add to deck
             shuffle(*currentPlayer, state);
         }
         drawCard(*currentPlayer, state);
         int cardDrawn = state->hand[*currentPlayer][state->handCount[*currentPlayer]-1];//top card of hand is most recently drawn card.
-        if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
+        if (cardDrawn == copper || cardDrawn == silver)
             (*drawntreasure)++;
         else{
             temphand[(*z)]=cardDrawn;
@@ -1151,7 +1151,7 @@ int mineEffect(struct gameState *state, int *currentPlayer, int choice1, int cho
         return -1;
     }
     
-    if (choice2 > treasure_map || choice2 < curse)
+    if (choice2 > treasure_map)
     {
         return -1;
     }
@@ -1182,7 +1182,7 @@ int mineEffect(struct gameState *state, int *currentPlayer, int choice1, int cho
 int remodelEffect(struct gameState *state, int *currentPlayer, int choice1, int choice2, int handPos){
     int j = state->hand[*currentPlayer][choice1];  //store card we will trash
     
-    if ( (getCost(state->hand[*currentPlayer][choice1]) + 2) > getCost(choice2) )
+    if ( (getCost(state->hand[*currentPlayer][choice1]) + 1) > getCost(choice2) )
     {
         return -1;
     }
@@ -1197,7 +1197,7 @@ int remodelEffect(struct gameState *state, int *currentPlayer, int choice1, int 
     {
         if (state->hand[*currentPlayer][i] == j)
         {
-            discardCard(i, *currentPlayer, state, 0);
+            discardCard(i, *currentPlayer, state, 1);
             break;
         }
     }
@@ -1208,13 +1208,13 @@ int remodelEffect(struct gameState *state, int *currentPlayer, int choice1, int 
 
 int smithyEffect(struct gameState *state, int *currentPlayer, int handPos){
     //+3 Cards
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i <= 3; i++)
     {
         drawCard(*currentPlayer, state);
     }
     
     //discard card from hand
-    discardCard(handPos, *currentPlayer, state, 0);
+    discardCard(handPos, *currentPlayer, state,2);
     return 0;
 }
 
