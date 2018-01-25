@@ -128,4 +128,13 @@ int getWinners(int players[MAX_PLAYERS], struct gameState *state);
 /* Set array position of each player who won (remember ties!) to
    1, others to 0 */
 
+// Now introduce the card effects specified by car
+
+int adventurerEffect(int *drawntreasure, struct gameState *state, int *currentPlayer, int *z, int *temphand);
+int mineEffect(struct gameState *state, int *currentPlayer, int choice1, int choice2, int handPos);
+int remodelEffect(struct gameState *state, int *currentPlayer, int choice1, int choice2, int handPos);
+int smithyEffect(struct gameState *state, int *currentPlayer, int handPos);
+int stewardEffect(struct gameState *state, int *currentPlayer, int choice1, int choice2, int choice3, int handPos);
+
+
 #endif
