@@ -1,72 +1,120 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include "bst.h"
-#include "structs.h"
+/* -----------------------------------------------------------------------
+ * This code is based on the template provided by Professor Aburas
+ *
+ * Testing the full deck count function
+ *
+ * -----------------------------------------------------------------------
+ */
 
-struct Node {
-	TYPE         val;
-	struct Node *left;
-	struct Node *right;
-};
+#include "dominion.h"
+#include "dominion_helpers.h"
+#include <string.h>
+#include <stdio.h>
+#include <assert.h>
+#include "rngs.h"
+#include <stdbool.h>
 
-struct BSTree {
-	struct Node *root;
-	int          cnt;
-};
+// set NOISY_TEST to 0 to remove printfs from output
+#define NOISY_TEST 1
 
-TYPE _leftMost(struct Node *cur);
-struct Node *_removeLeftMost(struct Node *cur);
-struct Node *_removeNode(struct Node *cur, TYPE val);
 
-void testRemoveNode() {
-    struct BSTree *tree = buildBSTTree();
-    struct Node *cur;
-    struct data myData1;
-	struct data myData2;
-	struct data myData3;
-	struct data myData4;
-		
-	myData1.number = 50;
-	myData1.name = "rooty";
-	myData2.number = 13;
-	myData2.name = "lefty";
-	myData3.number = 110;
-	myData3.name = "righty";
-	myData4.number = 10;
-	myData4.name = "lefty of lefty";
-    
-    _removeNode(tree->root, &myData4);
-    if (compare(tree->root->val, &myData1) == 0 && tree->root->left->left == NULL)
-        printf("_removeNode(): PASS remove left of left of root 1st try\n");
-    else
-        printf("_removeNode(): FAIL remove left of left of root 1st try\n");
-        
-    _removeNode(tree->root, &myData3);
-    if (compare(tree->root->val, &myData1) == 0 && tree->root->right == NULL)
-        printf("_removeNode(): PASS remove right of root 2st try\n");
-    else
-        printf("_removeNode(): FAIL remove right of root 2st try\n");
-    
-    _removeNode(tree->root, &myData2);
-    if (compare(tree->root->val, &myData1) == 0 && tree->root->left == 0)
-        printf("_removeNode(): PASS remove left of root 3st try\n");
-    else
-        printf("_removeNode(): FAIL remove left of root 3st try\n");
-        
-    cur = _removeNode(tree->root, &myData1);
-    if (cur == NULL)
-        printf("_removeNode(): PASS remove root 4st try\n");
-    else
-        printf("_removeNode(): FAIL remove root 4st try\n");
-        
+int customAssert(bool test){
+    if (test == false){
+        printf("TEST FAILED");
+        return 1;
+    }
+    else{
+        printf("TEST SUCCESSFULLY COMPLETED");
+        return 0;
+    }
 }
 
-
-int main(int argc, char *argv[])
-{
-    testRemoveNode();
+int main() {
+    // Basic set up for the game
+    int i;
+    int seed = 1000;
+    int assertTotal = 0;
+    int numPlayer = 4; // max number of players
+    int p, r, result, count, handCards, deckCards, discardCards, card;
+    int maxHandCount = 20;
+    int maxDiscardCount = maxHandCount;
+    int maxDeckCount = maxHandCount;
+    int handCount, discardCount, deckCount;
+    int resetHand[maxHandCount];
+    int resetDeck[maxDeckCount];
+    int resetDiscard[maxDiscardCount];
+    int k[10] = {adventurer, council_room, feast, gardens, mine
+        , remodel, smithy, village, baron, great_hall};
+    struct gameState G;
+    int testCardSize = 16; // Number of cards to test gaining
+    int testCards[16] = {adventurer, council_room, feast, gardens, mine
+        , remodel, smithy, village, baron, great_hall, estate, duchy, province, copper, silver, gold};
+    
+    for (i = 0; i < maxHandCount; i++)
+    {
+        resetHand[i] = copper;
+    }
+    for (i = 0; i < maxDiscardCount; i++)
+    {
+        resetDiscard[i] = copper;
+    }
+    for (i = 0; i < maxDeckCount; i++)
+    {
+        resetDeck[i] = copper;
+    }
+    
+    
+    printf ("TESTING fullDeckCount():\n");
+    for (p = 0; p < numPlayer; p++){
+        for (card = 0; card <= testCardSize; card++){
+            for(handCards = 0; handCards <= maxHandCount; handCards += 5){
+                for(deckCards = 0; deckCards <= maxHandCount; deckCards += 5){
+                    for(discardCards = 0; discardCards <= maxHandCount; discardCards += 5){
+                    
+                        memset(&G, 23, sizeof(struct gameState));   // clear the game state
+                        r = initializeGame(numPlayer, k, seed, &G); // initialize a new game
+                        G.handCount[p] = maxHandCount;
+                        memcpy(G.hand[p], resetHand, sizeof(int) * maxHandCount); // initialize hand to all barons
+                        G.deckCount[p] = maxDeckCount;
+                        memcpy(G.deck[p], resetDeck, sizeof(int) * maxDeckCount); // initialize deck to all barons
+                        G.discardCount[p] = maxDiscardCount;
+                        memcpy(G.discard[p], resetDiscard, sizeof(int) * maxDiscardCount); // initialize discard to all barons
+                        // Set up the hand / deck / discard
+                    
+                        for(i = 0; i < handCards; i++){
+                            G.hand[p][i] = testCards[card];
+                        }
+                        
+                        for(i = 0; i < deckCards; i++){
+                            G.deck[p][i] = testCards[card];
+                        }
+                        
+                        for(i = 0; i < discardCards; i++){
+                            G.discard[p][i] = testCards[card];
+                        }
+                        
+                    result = handCards + deckCards + discardCards;
+                        int testResult = fullDeckCount(p, testCards[card], &G);
+                        
+#if (NOISY_TEST == 1)
+                        printf("Test player %d, with %d deck, %d hand, and %d discard. \n", p, deckCards, handCards, discardCards);
+#endif
+                        
+#if (NOISY_TEST == 1)
+                        printf("G.cards = %d, expected = %d\n", testResult, result);
+#endif
+                        assertTotal += customAssert(testResult == result);
+                        
+                        
+                    }
+                }
+            }
+        }
+    }
+    
+    if(assertTotal == 0){
+        printf("All tests passed!\n");
+    }
+    
     return 0;
 }
-
-
-
