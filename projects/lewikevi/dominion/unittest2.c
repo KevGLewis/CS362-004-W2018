@@ -18,18 +18,7 @@
 
 // set NOISY_TEST to 0 to remove printfs from output
 #define NOISY_TEST 1
-
-
-int customAssert(bool test){
-    if (test == false){
-        printf("TEST FAILED");
-        return 1;
-    }
-    else{
-        printf("TEST SUCCESSFULLY COMPLETED");
-        return 0;
-    }
-}
+#define TESTFUNCTION "buyCard()"
 
 int main() {
     // Basic set up for the game
@@ -37,7 +26,7 @@ int main() {
     int seed = 1000;
     int assertTotal = 0;
     int numPlayer = 4; // max number of players
-    int p, r, card, supply, result, numCoin, numBuys, bResult;
+    int p, r, card, supply, numCoin, numBuys, bResult;
     int disCount = 0;
     int dResult, supResult, coinResult;
     int handCount = 5;
@@ -58,7 +47,7 @@ int main() {
         golds[i] = gold;
     }
     
-    printf ("TESTING buyCard():\n");
+    printf("----------------- Testing Function: %s ----------------\n", TESTFUNCTION);
     for (p = 0; p < numPlayer; p++){
         for (card = 0; card <= testCardSize; card++){
             for(supply = 0; supply <= 1; supply++){
@@ -66,6 +55,7 @@ int main() {
 
                     memset(&G, 23, sizeof(struct gameState));   // clear the game state
                     r = initializeGame(numPlayer, k, seed, &G); // initialize a new game
+                    G.whoseTurn = p;
                     numCoin = getCost(testCards[card]) + supply - 1; // Either we'll have just enough coins or 1 less than enough
                     G.coins = numCoin;
                     G.numBuys = numBuys;
@@ -121,7 +111,10 @@ int main() {
     }
     
     if(assertTotal == 0){
-        printf("All tests passed!\n");
+        printf("\n >>>>> SUCCESS: Testing complete %s <<<<<\n\n", TESTFUNCTION);
+    }
+    else{
+        printf("\n >>>>> FAILURE: Testing complete %s <<<<<\n\n", TESTFUNCTION);
     }
     
     return 0;

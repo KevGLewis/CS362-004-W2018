@@ -16,18 +16,7 @@
 
 // set NOISY_TEST to 0 to remove printfs from output
 #define NOISY_TEST 1
-
-
-int customAssert(bool test){
-    if (test == false){
-        printf("TEST FAILED");
-        return 1;
-    }
-    else{
-        printf("TEST SUCCESSFULLY COMPLETED");
-        return 0;
-    }
-}
+#define TESTFUNCTION "updateCoins()"
 
 int main() {
     // Basic set up for the game
@@ -48,7 +37,7 @@ int main() {
         barons[i] = baron;
     }
     
-    printf ("TESTING updateCOins():\n");
+    printf("----------------- Testing Function: %s ----------------\n", TESTFUNCTION);
     for (p = 0; p < numPlayer; p++){
         for (nCop = 0; nCop <= handCount; nCop++){
             for(nSil = 0; nSil <= handCount - nCop; nSil++){
@@ -73,6 +62,8 @@ int main() {
                             G.hand[p][i] = gold;
                         }
                     
+                        updateCoins(p, &G, bonus);
+                        
                         result = nCop + (2 * nSil) + (3 * nGold) + bonus;
                     
 #if (NOISY_TEST == 1)
@@ -92,7 +83,10 @@ int main() {
     }
     
     if(assertTotal == 0){
-        printf("All tests passed!\n");
+        printf("\n >>>>> SUCCESS: Testing complete %s <<<<<\n\n", TESTFUNCTION);
+    }
+    else{
+        printf("\n >>>>> FAILURE: Testing complete %s <<<<<\n\n", TESTFUNCTION);
     }
     
     return 0;

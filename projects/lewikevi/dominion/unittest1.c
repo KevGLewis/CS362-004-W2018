@@ -10,26 +10,15 @@
 
 #include "dominion.h"
 #include "dominion_helpers.h"
+#include "rngs.h"
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
-#include "rngs.h"
 #include <stdbool.h>
 
 // set NOISY_TEST to 0 to remove printfs from output
 #define NOISY_TEST 1
-
-
-int customAssert(bool test){
-    if (test == false){
-        printf("TEST FAILED");
-        return 1;
-    }
-    else{
-        printf("TEST SUCCESSFULLY COMPLETED");
-        return 0;
-    }
-}
+#define TESTFUNCTION "gainCard()"
 
 int main() {
     // Basic set up for the game
@@ -56,7 +45,7 @@ int main() {
         golds[i] = gold;
     }
     
-    printf ("TESTING gainCard():\n");
+    printf("----------------- Testing Function: %s ----------------\n", TESTFUNCTION);
     for (p = 0; p < numPlayer; p++)
     {
         for (card = 0; card <= testCardSize; card++){
@@ -67,6 +56,7 @@ int main() {
 #endif
                 memset(&G, 23, sizeof(struct gameState));   // clear the game state
                 r = initializeGame(numPlayer, k, seed, &G); // initialize a new game
+                G.whoseTurn = p;
                 G.supplyCount[testCards[card]] = supply;// set the number of cards on hand
                 G.handCount[p] = handCount;
                 
@@ -124,7 +114,10 @@ int main() {
     
     
     if(assertTotal == 0){
-        printf("All tests passed!\n");
+        printf("\n >>>>> SUCCESS: Testing complete %s <<<<<\n\n", TESTFUNCTION);
+    }
+    else{
+        printf("\n >>>>> FAILURE: Testing complete %s <<<<<\n\n", TESTFUNCTION);
     }
     
     return 0;
