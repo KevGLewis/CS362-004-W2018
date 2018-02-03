@@ -19,7 +19,6 @@
 #include "interface.h"
 #include "rngs.h"
 
-
 int main2(int argc, char *argv[]) {
 	//Default cards, as defined in playDom
 	int k[10] = {adventurer, gardens, embargo, village, minion, mine, cutpurse, sea_hag, tribute, smithy};
@@ -27,7 +26,9 @@ int main2(int argc, char *argv[]) {
 	initializeGame(2,k,1,&g);
 	printf ("SUCCESSFUL INIT\n");
 	getchar();
+    return 1;
 }
+
 
 int main(int argc, char* argv[]) {
 		char *add  = "add";

@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #ifndef _DOMINION_H
 #define _DOMINION_H
 
@@ -73,10 +75,9 @@ struct gameState {
   int playedCardCount;
 };
 
-/* All functions return -1 on failure, and DO NOT CHANGE GAME STATE;
-   unless specified for other return, return 0 on success */
+// All functions return -1 on failure, and DO NOT CHANGE GAME STATE;
 
-struct gameState* newGame();
+struct gameState* newGame(void);
 
 int* kingdomCards(int k1, int k2, int k3, int k4, int k5, int k6, int k7,
 		  int k8, int k9, int k10);
@@ -135,6 +136,7 @@ int mineEffect(struct gameState *state, int *currentPlayer, int choice1, int cho
 int remodelEffect(struct gameState *state, int *currentPlayer, int choice1, int choice2, int handPos);
 int smithyEffect(struct gameState *state, int *currentPlayer, int handPos);
 int stewardEffect(struct gameState *state, int *currentPlayer, int choice1, int choice2, int choice3, int handPos);
+int customAssert(bool test);
 
 
 #endif

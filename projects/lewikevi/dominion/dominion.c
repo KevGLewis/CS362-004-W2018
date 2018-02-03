@@ -1155,7 +1155,7 @@ int mineEffect(struct gameState *state, int *currentPlayer, int choice1, int cho
     {
         return -1;
     }
-    
+
     if ( (getCost(state->hand[*currentPlayer][choice1]) + 3) > getCost(choice2) )
     {
         return -1;
@@ -1347,6 +1347,17 @@ int updateCoins(int player, struct gameState *state, int bonus)
   state->coins += bonus;
 
   return 0;
+}
+
+int customAssert(bool test){
+    if (test == false){
+        printf("TEST FAILED\n");
+        return 1;
+    }
+    else{
+        printf("TEST SUCCESSFULLY COMPLETED\n");
+        return 0;
+    }
 }
 
 
