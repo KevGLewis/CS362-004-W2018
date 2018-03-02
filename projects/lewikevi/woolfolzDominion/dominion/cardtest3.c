@@ -18,6 +18,17 @@
 
 #define TESTCARD "adventurer"
 
+int customAssert(bool test){
+    if (test == false){
+        printf(" -- FAILED\n");
+        return 1;
+    }
+    else{
+        printf(" ---- SUCCESS\n");
+        return 0;
+    }
+}
+
 int main() {
     int newCards = 0;
     int discarded = 1;
