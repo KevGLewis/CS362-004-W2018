@@ -1351,11 +1351,11 @@ int updateCoins(int player, struct gameState *state, int bonus)
 
 int customAssert(bool test){
     if (test == false){
-        printf("TEST FAILED\n");
+        printf(" FAILED\n");
         return 1;
     }
     else{
-        printf("TEST SUCCESSFULLY COMPLETED\n");
+        printf(" SUCCESS\n");
         return 0;
     }
 }

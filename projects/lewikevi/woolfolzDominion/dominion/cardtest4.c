@@ -19,6 +19,17 @@
 
 #define TESTCARD "smithy"
 
+int customAssert(bool test){
+    if (test == false){
+        printf(" -- FAILED\n");
+        return 1;
+    }
+    else{
+        printf(" ---- SUCCESS\n");
+        return 0;
+    }
+}
+
 int main() {
     
     srand(time(NULL)); // Seed the random number generator
@@ -65,10 +76,6 @@ int main() {
         deckCount = rand() % 10;
         discardCount = rand() % 10;
         
-        handCount = 5;
-        deckCount = 9;
-        discardCount = 3;
-        
         // Now determine what the correct output should be
         discardResult = discardCount + 1; //smithy
         deckResult = deckCount;
@@ -114,18 +121,18 @@ int main() {
             }
             else
             {
-                testG.hand[thisPlayer][i] = testCards[rand() % (nTestCards - 2)];
+                testG.hand[thisPlayer][i] = testCards[rand() % (nTestCards - 1)];
             }
         }
         
         for (i = 0; i < deckCount; i++)
         {
-            testG.deck[thisPlayer][i] = testCards[rand() % (nTestCards - 2)];
+            testG.deck[thisPlayer][i] = testCards[rand() % nTestCards];
         }
         
         for (i = 0; i < discardCount; i++)
         {
-            testG.discard[thisPlayer][i] = testCards[rand() % (nTestCards - 2)];
+            testG.discard[thisPlayer][i] = testCards[rand() % nTestCards];
         }
         
         // ----------- TEST Description --------------
